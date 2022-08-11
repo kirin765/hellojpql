@@ -46,25 +46,19 @@ public class JpaMain {
             em.persist(member2);
             em.persist(member3);
 
-            em.flush();
+            int resultCount = em.createQuery("update Member m set m.age = 20")
+                    .executeUpdate();
+
+            System.out.println("resultCount = " + resultCount);
+
             em.clear();
 
+            Member findMember = em.find(Member.class, member.getId());
+            System.out.println("findMember = " + findMember);
 
-            String query = "select t from Team t";
-            List<Team> resultList = em.createQuery(query, Team.class)
-                    .setFirstResult(0)
-                    .setMaxResults(2)
-                    .getResultList();
-
-            System.out.println("resultList = " + resultList.size());
-
-            for (Team team1 : resultList) {
-                System.out.println("team1.getName() = " + team1.getName() + " " + team1.getMembers().size());
-                for (Member member1 : team1.getMembers()) {
-                    System.out.println("member1 = " + member1);
-                }
-            }
-
+            System.out.println("member.getAge() = " + member.getAge());
+            System.out.println("member2.getAge() = " + member2.getAge());
+            System.out.println("member3.getAge() = " + member3.getAge());
 
             tx.commit();
         }catch (Exception e) {
